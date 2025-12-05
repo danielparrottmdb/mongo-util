@@ -29,10 +29,10 @@ jobs:
       - name: Install catalogmirror dependency
         run: |
           mvn install:install-file \
-            -Dfile=lib/catalogmirror-1.0.5.jar \
+            -Dfile=lib/catalogmirror.jar \
             -DgroupId=com.mongodb \
             -DartifactId=catalogmirror \
-            -Dversion=1.0.5 \
+            -Dversion=1.0.6 \
             -Dpackaging=jar
 
       - name: Build with Maven
