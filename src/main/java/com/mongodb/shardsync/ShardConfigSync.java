@@ -3286,6 +3286,17 @@ public class ShardConfigSync implements Callable<Integer> {
 
         int httpStatusPort = config.mongoMirrorStartPort;
 
+        // Parse pprof address and port for incrementing per shard
+        String pprofAddress = null;
+        int pprofPort = 0;
+        if (config.pprof != null) {
+            int colonIndex = config.pprof.lastIndexOf(':');
+            if (colonIndex > 0) {
+                pprofAddress = config.pprof.substring(0, colonIndex);
+                pprofPort = Integer.parseInt(config.pprof.substring(colonIndex + 1));
+            }
+        }
+
         for (Shard source : sourceShardClient.getShardsMap().values()) {
 
             MongoMirrorRunner mongomirror = new MongoMirrorRunner(source.getId());
@@ -3368,8 +3379,8 @@ public class ShardConfigSync implements Callable<Integer> {
                 mongomirror.setLogPath(config.mongomirrorLogPath);
             }
 
-            if (config.pprof != null) {
-                mongomirror.setPprof(config.pprof);
+            if (pprofAddress != null) {
+                mongomirror.setPprof(pprofAddress + ":" + pprofPort++);
             }
 
             if (config.resumeDbPath != null) {
